@@ -20,3 +20,4 @@
 - models/train_classifier: Loads data from sqllite db, trains pipeline, evaluates model, and saves model to pickle file
 - app/run.py: Launches web app which takes text as user input, and outputs classifications. Shows a couple visuals to
     better understand the data.
+- notebooks/*: Exploratory notebooks
