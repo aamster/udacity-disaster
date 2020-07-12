@@ -1,7 +1,6 @@
 import sys
 import pandas as pd
 from sqlalchemy import create_engine
-import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import pickle
@@ -11,10 +10,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 
 def load_data(database_filepath):
+    """
+    Loads data from sqlllite db
+    :param database_filepath:
+    :return: (data, labels, category names)
+    """
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table('InsertTableName', engine)
     X = df['message']
@@ -24,6 +28,16 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Tokenizes string by performing following steps:
+    1) splits string into tokens
+    2) lemmatizes
+    3) normalizes
+    4) strips whitespace
+
+    :param text: string text
+    :return: list of tokens
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     
@@ -36,6 +50,10 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Model pipeline
+    :return: sklearn pipeline
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize, ngram_range=(1,2), max_df=.5)),
         ('tfidf', TfidfTransformer()),
@@ -45,6 +63,16 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    For each target that we want to predict, outputs the following:
+    accuracy, precision, recall
+
+    :param model: trained model
+    :param X_test:
+    :param Y_test:
+    :param category_names:
+    :return: None
+    """
     y_pred = model.predict(X_test)
 
     for i, topic in enumerate(category_names):
@@ -60,6 +88,12 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    Saves model to binary pickle file
+    :param model: trained model
+    :param model_filepath:
+    :return: None
+    """
     file = open(model_filepath, "wb")
     pickle.dump(model, file=file)
 

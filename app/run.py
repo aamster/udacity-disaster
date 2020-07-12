@@ -16,19 +16,6 @@ nltk.download(['punkt', 'wordnet'])
 
 app = Flask(__name__)
 
-
-def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
-
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
-
-
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('InsertTableName', engine)
@@ -38,6 +25,11 @@ model = joblib.load("../models/classifier.pkl")
 
 
 def plot_genre_distr():
+    """
+    Returns disctionary of plotly plot for genre distribution
+
+    :return: dictionary of plotly plot
+    """
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
@@ -62,6 +54,11 @@ def plot_genre_distr():
 
 
 def plot_response_distr():
+    """
+    Returns disctionary of plotly plot for response distribution
+
+    :return: dictionary of plotly plot
+    """
     category_names = [c for c in df if c not in ('id', 'message', 'original', 'genre')]
     response_counts = (
         df[category_names].melt(var_name='response_type')
