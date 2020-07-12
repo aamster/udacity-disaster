@@ -12,3 +12,11 @@
     `python run.py`
 
 3. Go to http://0.0.0.0:3001/
+
+
+### Files:
+
+- data/process_data.py: Loads data from files, cleans data, and loads into sqllite db
+- models/train_classifier: Loads data from sqllite db, trains pipeline, evaluates model, and saves model to pickle file
+- app/run.py: Launches web app which takes text as user input, and outputs classifications. Shows a couple visuals to
+    better understand the data.
