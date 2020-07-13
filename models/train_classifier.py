@@ -9,7 +9,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 
@@ -59,6 +59,20 @@ def build_model():
         ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(estimator=RandomForestClassifier()))
     ])
+
+    #######################
+    # GridSearchCV was used in notebooks/ML Pipeline Preparation.ipynb to find optimal parameters
+    # NOTE: TAKES 20 MINUTES TO RUN
+    # UNCOMMENT TO WAIT 20 MINUTES
+    #######################
+    # parameters = {
+    #     'vect__ngram_range': ((1, 1), (1, 2)),
+    #     'vect__max_df': (0.5, 1.0),
+    #     'clf__estimator__max_depth': [None, 3]
+    # }
+    #
+    # pipeline = GridSearchCV(pipeline, param_grid=parameters, n_jobs=-1)
+
     return pipeline
 
 
